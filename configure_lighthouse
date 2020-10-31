@@ -27,9 +27,9 @@ then
 fi
 
 # fix sshd_config
-if ! grep -Fxq "/etc/ssh/sshd_config" "GatewayPorts yes"
+if ! sudo grep -Fxq "/etc/ssh/sshd_config" "GatewayPorts yes"
 then
-  echo "GatewayPorts yes" >>"/etc/ssh/sshd_config"
+  echo "GatewayPorts yes" | sudo tee -a "/etc/ssh/sshd_config"
   sudo systemctl reload sshd.service
 fi
 
