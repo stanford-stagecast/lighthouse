@@ -16,8 +16,6 @@ then
   exit 1
 fi
 
-ports=(`cat "${infopath}" | head -n1`)
-
 # Get the ip:iface mapping for binding
 iface_inets=$(ip addr | awk '/^[0-9]+:/ { 
   sub(/:/,"",$2); iface=$2 } 
@@ -29,6 +27,7 @@ iface_inets=$(ip addr | awk '/^[0-9]+:/ {
 for lighthouse in $(ls lighthouses/*)
 do
   ip=$(cat "${lighthouse}" | head -n1)
+  ports=(`cat "${infopath}" | head -n1`)
 
   for iface in eno2 usb0
   do
