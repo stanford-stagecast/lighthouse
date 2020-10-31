@@ -3,12 +3,11 @@
 # Switch to this script's directory
 cd "${0%/*}"
 
-# correct user?
-current_user=`whoami`
-if [[ ${current_user} != "stagecast" ]]
+# fix sshd_config
+if ! sudo grep -Fxq "GatewayPorts yes" "/etc/ssh/sshd_config"
 then
-  echo "Please log in as 'stagecast' first."
-  exit 1
+  echo "GatewayPorts yes" | sudo tee -a "/etc/ssh/sshd_config"
+  sudo systemctl reload sshd.service
 fi
 
 # is this lighthouse registered?
@@ -19,18 +18,12 @@ then
   exit 1
 fi
 
+sudo -i -u stagecast bash <<EOF
 authorized_keys=`echo ~/.ssh/authorized_keys`
 if [[ ! -f "${authorized_keys}" ]]
 then
   mkdir -p ~/.ssh
   touch "${authorized_keys}"
-fi
-
-# fix sshd_config
-if ! sudo grep -Fxq "GatewayPorts yes" "/etc/ssh/sshd_config" 
-then
-  echo "GatewayPorts yes" | sudo tee -a "/etc/ssh/sshd_config"
-  sudo systemctl reload sshd.service
 fi
 
 # add new ssh keys
@@ -44,3 +37,4 @@ do
     echo "${public_key}" >>${authorized_keys}
   fi
 done
+EOF
