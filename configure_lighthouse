@@ -39,7 +39,7 @@ do
   boat_name=`basename ${boat}`
   public_key=`cat ${boat} | tail -n1`
 
-  if ! grep -q "${public_key}"
+  if ! grep -q "${public_key}" "${authorized_keys}"
   then
     echo "${public_key}" >>${authorized_keys}
   fi
