@@ -19,7 +19,7 @@ then
   exit 1
 fi
 
-authorized_keys="~/.ssh/authorized_keys"
+authorized_keys=`echo ~/.ssh/authorized_keys`
 if [[ ! -f "${authorized_keys}" ]]
 then
   mkdir -p ~/.ssh
