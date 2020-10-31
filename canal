@@ -35,7 +35,7 @@ do
       inet=$(echo "${iface_inets}" | grep ${iface} | cut -f1 -d' ')
 
       if [[ ! -z ${inet} ]]; then
-        autossh -NTR \*:${ports[0]}:localhost:22 -oStrictHostKeyChecking=accept-new -oExitOnForwardFailure=yes -b ${inet} stagecast@${ip} || true
+        autossh -NTR \*:${ports[0]}:localhost:22 -oStrictHostKeyChecking=accept-new -oExitOnForwardFailure=yes -oBatchMode=yes -b ${inet} stagecast@${ip} || true
       else
         echo "Cannot bind to interface ${iface}. Retrying in 1 minute."
       fi
