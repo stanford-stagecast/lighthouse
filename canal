@@ -17,12 +17,12 @@ then
 fi
 
 # Get the ip:iface mapping for binding
-iface_inets=$(ip addr | awk '/^[0-9]+:/ { 
+iface_inets="$(ip addr | awk '/^[0-9]+:/ {
   sub(/:/,"",$2); iface=$2 } 
 /^[[:space:]]*inet / { 
   split($2, a, "/")
   print a[1], iface
-}')
+}')"
 
 for lighthouse in $(ls lighthouses/*)
 do
@@ -32,7 +32,7 @@ do
   for iface in eno2 usb0
   do
     while true; do
-      inet=$(echo ${iface_inets} | grep ${iface} | cut -f1 -d' ')
+      inet=$(echo "${iface_inets}" | grep ${iface} | cut -f1 -d' ')
 
       if [[ ! -z ${inet} ]]; then
         autossh -NTR \*:${ports[0]}:localhost:22 -oStrictHostKeyChecking=accept-new -oExitOnForwardFailure=yes -b ${inet} stagecast@${ip} || true
