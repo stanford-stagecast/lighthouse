@@ -16,14 +16,6 @@ then
   exit 1
 fi
 
-# Get the ip:iface mapping for binding
-iface_inets="$(ip addr | awk '/^[0-9]+:/ {
-  sub(/:/,"",$2); iface=$2 } 
-/^[[:space:]]*inet / { 
-  split($2, a, "/")
-  print a[1], iface
-}')"
-
 for lighthouse in $(ls lighthouses/*)
 do
   ip=$(cat "${lighthouse}" | head -n1)
@@ -32,6 +24,13 @@ do
   for iface in eno2 usb0
   do
     while true; do
+      # Get the ip:iface mapping for binding
+      iface_inets="$(ip addr | awk '/^[0-9]+:/ {
+          sub(/:/,"",$2); iface=$2 }
+        /^[[:space:]]*inet / {
+          split($2, a, "/")
+          print a[1], iface
+        }')"
       inet=$(echo "${iface_inets}" | grep ${iface} | cut -f1 -d' ')
 
       if [[ ! -z ${inet} ]]; then
