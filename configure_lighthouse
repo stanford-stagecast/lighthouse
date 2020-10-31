@@ -34,7 +34,7 @@ then
 fi
 
 # add new ssh keys
-for boat in boats
+for boat in $(ls boats/*)
 do
   boat_name=`basename ${boat}`
   public_key=`cat ${boat} | tail -n1`
