@@ -1,0 +1,46 @@
+#!/bin/bash -e
+
+# Switch to this script's directory
+cd "${0%/*}"
+
+# correct user?
+current_user=`whoami`
+if [[ ${current_user} != "stagecast" ]]
+then
+  echo "Please log in as 'stagecast' first."
+  exit 1
+fi
+
+# is this lighthouse registered?
+hostname=`hostname -f`
+if [[ ! -f "lighthouses/${hostname}" ]]
+then
+  echo "Hostname wasn't found in the list: ${hostname}."
+  exit 1
+fi
+
+authorized_keys="~/.ssh/authorized_keys"
+if [[ ! -f "${authorized_keys}" ]]
+then
+  mkdir -p ~/.ssh
+  touch "${authorized_keys}"
+fi
+
+# fix sshd_config
+if ! grep -Fxq "/etc/ssh/sshd_config" "GatewayPorts yes"
+then
+  echo "GatewayPorts yes" >>"/etc/ssh/sshd_config"
+  sudo systemctl reload sshd.service
+fi
+
+# add new ssh keys
+for boat in boats
+do
+  boat_name=`basename ${boat}`
+  public_key=`cat ${boat} | tail -n1`
+
+  if ! grep -q "${public_key}"
+  then
+    echo "${public_key}" >>${authorized_keys}
+  fi
+done

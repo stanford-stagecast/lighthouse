@@ -1,0 +1,20 @@
+#!/bin/bash -e
+
+# root?
+if [[ $EUID -ne 0 ]]; then
+   echo "This script must be run as root."
+   exit 1
+fi
+
+# Switch to this script's directory
+cd "${0%/*}"
+
+service_name=stagecast-canal.service
+
+systemctl stop ${service_name} || true
+
+script_path="$(pwd)/canal"
+cp ${service_name} /etc/systemd/system
+echo "ExecStart=${script_path}" >>/etc/systemd/system/${service_name}
+
+systemctl start ${service_name}
