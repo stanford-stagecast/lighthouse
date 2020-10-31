@@ -3,6 +3,8 @@
 # Switch to this script's directory
 cd "${0%/*}"
 
+export AUTOSSH_POLL=60
+
 # kill all the children when done
 trap "trap - SIGTERM && kill -- -$$" SIGINT SIGTERM EXIT
 
@@ -19,7 +21,7 @@ my_port=`cat "${infopath}" | head -n1`
 for lighthouse in $(ls lighthouses/*)
 do
   ip=$(cat "${lighthouse}" | head -n1)
-  autossh -NTR \*:${my_port}:localhost:22 stagecast@${ip} &
+  autossh -NTR \*:${my_port}:localhost:22 -oStrictHostKeyChecking=accept-new stagecast@${ip} &
 done
 
 wait
