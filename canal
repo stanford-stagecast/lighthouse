@@ -16,9 +16,9 @@ then
   exit 1
 fi
 
-raw_ports=`cat "${infopath}" | head -n1`
-IFS=' ' read -r -a ports <<<${raw_ports}
+ports=(`cat "${infopath}" | head -n1`)
 
+# Get the ip:iface mapping for binding
 iface_inets=$(ip addr | awk '/^[0-9]+:/ { 
   sub(/:/,"",$2); iface=$2 } 
 /^[[:space:]]*inet / { 
