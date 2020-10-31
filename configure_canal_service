@@ -17,4 +17,5 @@ script_path="$(pwd)/canal"
 cp ${service_name} /etc/systemd/system
 echo "ExecStart=${script_path}" >>/etc/systemd/system/${service_name}
 
+systemctl daemon-reload
 systemctl start ${service_name}

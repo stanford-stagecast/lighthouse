@@ -16,7 +16,7 @@ fi
 
 my_port=`cat "${infopath}" | head -n1`
 
-for lighthouse in $(ls "lighthouses/*")
+for lighthouse in $(ls lighthouses/*)
 do
   ip=$(cat "${lighthouse}" | head -n1)
   autossh -NTR \*:${my_port}:localhost:22 stagecast@${ip} &

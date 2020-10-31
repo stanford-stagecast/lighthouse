@@ -7,8 +7,8 @@ Wants=network-online.target
 WantedBy=multi-user.target
 
 [Service]
+StartLimitBurst=0
 Type=simple
 Restart=always
 RestartSec=1
 User=stagecast
-ExecStart=
