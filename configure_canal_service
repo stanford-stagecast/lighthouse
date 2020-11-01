@@ -9,6 +9,11 @@ fi
 # Switch to this script's directory
 cd "${0%/*}"
 
+# (1) install netplan configuration
+cp network-plan.yaml /etc/netplan/00-installer-config.yaml
+netplan apply
+
+# (2) install the service
 service_name=stagecast-canal.service
 
 systemctl stop ${service_name} || true
